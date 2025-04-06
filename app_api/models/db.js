@@ -29,17 +29,16 @@ if(process.platform === 'win32'){
         input: process.stdin,
         output: process.stdout
 });
-
-r1.on('SIGINT', () => {
-process.emit("SIGINT");
-});
+    r1.on('SIGINT', () => {
+        process.emit("SIGINT");
+    });
 }
 
 // Configure for Graceful Shutdown
 const gracefulShutdown = (msg) => {
-mongoose.connection.close(() => {
-console.log(`Mongoose disconnected through ${msg}`);
-});
+    mongoose.connection.close(() => {
+        console.log(`Mongoose disconnected through ${msg}`);
+    });
 };
 
 // Event Listeners to process graceful shutdowns
