@@ -7,12 +7,13 @@ const tripsController = require('../controllers/trips');
 
 //Define the routes for the trips API
 router
-    .route('trips')
+    .route('/trips')
     .get(tripsController.tripsList); //GET request to list all trips
     
 
+module.exports = router; //Export the router object for use in other files
 router
-    .route('trips/:tripCode')
+    .route('/trips/:tripCode')
     .get(tripsController.tripsFindByCode); //GET request to list all trips
 
 
