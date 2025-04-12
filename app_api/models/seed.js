@@ -1,4 +1,4 @@
-const Mongoose = require('./db');
+const mongoose = require('./db');
 const Trip = require('./travlr');
 
 var fs = require('fs');
@@ -10,6 +10,6 @@ const seedDB = async () => {
 };
 
 seedDB().then(async () => {
-    await Mongoose.connection.close();
+    await mongoose.connection.close();
     process.exit(0);
 });
