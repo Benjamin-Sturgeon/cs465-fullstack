@@ -10,10 +10,11 @@ router
     .get(tripsController.tripsList) // GET Method routes tripsList
     .post(tripsController.tripsAddTrip); // POST Method Adds a Trip
 
-// GET and PUT Method routes tripsFindByCode and tripsUpdateTrip - requires parameter
+// GET PUT and DELETE Method routes tripsFindByCode and tripsUpdateTrip - requires parameter
 router
     .route('/trips/:tripCode')
     .get(tripsController.tripsFindByCode) // GET Method to find trip by code
-    .put(tripsController.tripsUpdateTrip); // PUT Method updates a trip
+    .put(tripsController.tripsUpdateTrip) // PUT Method updates a trip
+    .delete(tripsController.tripsDeleteTrip); // DELETE Method deletes a trip
 
 module.exports = router;

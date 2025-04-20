@@ -83,10 +83,32 @@ const tripsUpdateTrip = async (req, res) => {
     }
 };
 
+// DELETE: /trips/:tripCode - deletes an existing trip
+const tripsDeleteTrip = async (req, res) => {
+    try {
+        const q = await Model.findOneAndDelete(
+            { 'code': req.params.tripCode },
+            {
+                code: req.body.code,
+            },
+            { new: true } // Return the updated document
+        ).exec();
+
+        if (!q) {
+            return res.status(400).json({ message: "Error deleting trip" });
+        } else {
+            return res.status(200).json(q);
+        }
+    } catch (err) {
+        return res.status(500).json({ error: "Server error", details: err });
+    }
+};
+
 // Export the functions
 module.exports = {
     tripsList,
     tripsFindByCode,
     tripsAddTrip,
     tripsUpdateTrip,
+    tripsDeleteTrip,
 };
