@@ -1,25 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'], // Corrected the typo in 'styleUrl'
+  styleUrl: './navbar.component.css'
 })
+
 export class NavbarComponent implements OnInit {
-  constructor(private authenticationService: AuthenticationService) {}
 
-  ngOnInit(): void {}
+  constructor(
+    private authenticationService: AuthenticationService
+  ) { }
 
-  public isLoggedIn(): boolean {
+  ngOnInit() { }
+
+  public isLoggedIn(): Boolean {
     return this.authenticationService.isLoggedIn();
   }
 
   public onLogout(): void {
-    this.authenticationService.logout();
+    return this.authenticationService.logout();
   }
 }

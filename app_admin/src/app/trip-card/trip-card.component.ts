@@ -1,42 +1,57 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // Import Router for navigation
-import { Trip } from '../models/trip'; // Import Trip model
+import { Router } from '@angular/router';
+import { Trip } from '../models/trip';
 import { AuthenticationService } from '../services/authentication.service';
-
+import { TripDataService } from '../services/trip-data.service';
 
 @Component({
   selector: 'app-trip-card',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './trip-card.component.html',
-  styleUrls: ['./trip-card.component.css']
+  styleUrl: './trip-card.component.css'
 })
+
 export class TripCardComponent implements OnInit {
   @Input('trip') trip: any;
+  
+  constructor(private router: Router,
+    private authenticationService: AuthenticationService, 
+    private tripDataService: TripDataService
+  ) {}
+  
+  ngOnInit(): void {
 
-  constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
-  ) {} // Inject Router
+  }
 
-  ngOnInit(): void {}
+  public editTrip(trip: Trip) {
+    localStorage.removeItem('tripCode');
+    localStorage.setItem('tripCode', trip.code);
+    this.router.navigate(['edit-trip']);
+  }
 
-  public isLoggedIn(): boolean {
+  public deleteTrip(trip: Trip) {
+    localStorage.removeItem('tripCode');
+    localStorage.setItem('tripCode', trip.code);
+
+    console.log(trip.code)
+
+    this.tripDataService.deleteTrip(trip.code)
+    .subscribe({
+      next: (value: any) => {
+        console.log(value);
+        this.router.navigate(['']);
+        window.location.reload();
+      },
+      error: (error: any) => {
+        console.log('Error: ' + error);
+      }
+    })
+  }
+
+  public isLoggedIn()
+  {
     return this.authenticationService.isLoggedIn();
-  }
-
-  // Add editTrip method
-  public editTrip(trip: Trip): void {
-    localStorage.removeItem('tripCode'); // Remove any previous trip code
-    localStorage.setItem('tripCode', trip.code); // Store the current trip code
-    this.router.navigate(['/edit-trip']); // Navigate to the edit trip page
-  }
-
-  // Add deleteTrip method
-  public deleteTrip(trip: Trip): void {
-    localStorage.removeItem('tripCode'); // Remove any previous trip code
-    localStorage.setItem('tripCode', trip.code); // Store the current trip code
-    this.router.navigate(['/delete-trip']); // Navigate to the delete trip page
   }
 }

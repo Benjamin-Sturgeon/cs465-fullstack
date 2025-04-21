@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule  } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
@@ -10,50 +10,61 @@ import { User } from '../models/user';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'], // Fixed 'styleUrl' to 'styleUrls'
+  styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+
+
+export class LoginComponent {
   public formError: string = '';
+  submitted = false;
+
   credentials = {
     name: '',
     email: '',
-    password: '',
-  };
+    password: ''
+  }
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
 
-  public onLoginSubmit(): void {
+  }
+
+  public onLoginSubmit() : void {
     this.formError = '';
     if (!this.credentials.email || !this.credentials.password || !this.credentials.name) {
-      this.formError = 'Name, Email and password are required. Please try again.';
-      return;
+      this.formError = 'All fields are required, please try again';
+      this.router.navigateByUrl('#'); // Return to login page
+    } else {
+      this.doLogin();
     }
-    this.doLogin();
   }
 
   private doLogin(): void {
-    let newUser ={
-      email: this.credentials.email,
-      name: this.credentials.name, // Optional if not required by your backend
+    let newUser = {
+      name: this.credentials.name,
+      email: this.credentials.email
     } as User;
 
-    this.authenticationService.login(newUser, this.credentials.password).subscribe({
-      next: () => {
-        if (this.authenticationService.isLoggedIn()) {
-          this.router.navigate(['']); // Navigate to the home page
-        } else {
-          this.formError = 'Login failed. Please check your credentials.';
-        }
-      },
-      error: (err: any) => {
-        console.error('Login failed:', err);
-        this.formError = 'An error occurred during login. Please try again.';
-      },
-    });
+    // console.log('LoginComponent::doLogin');
+    // console.log(this.credentials);
+    this.authenticationService.login(newUser,
+      this.credentials.password);
+
+    if(this.authenticationService.isLoggedIn())
+    {
+      // console.log('Router::Direct');
+      this.router.navigate(['']);
+    } else {
+      var timer = setTimeout(() => {
+        if(this.authenticationService.isLoggedIn())
+        {
+          // console.log('Router::Pause');
+          this.router.navigate(['']);
+        }}, 3000);
+    }
   }
 }

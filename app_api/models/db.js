@@ -3,38 +3,39 @@ const host = process.env.DB_HOST || '127.0.0.1';
 const dbURI = `mongodb://${host}/travlr`;
 const readLine = require('readline');
 
-// Build the connection string and set the connection timeout.
-// timeout is in milliseconds.
+// Build the connectiion string and set the connection timeout.
+// timeout is in milliseconds
 const connect = () => {
-setTimeout(() => mongoose.connect(dbURI, {
-}), 1000);
+    setTimeout(() => mongoose.connect(dbURI, {
+
+    }), 1000);
 }
 
-// Monitor connection events
+// Monitor connection events.
 mongoose.connection.on('connected', () => {
-console.log(`Mongoose connected to ${dbURI}`);
+    console.log(`Mongoose connected to ${dbURI}`);
 });
 
 mongoose.connection.on('error', err => {
-console.log('Mongoose connection error: ', err);
+    console.log('Mongoose connection error: ', err);
 });
 
 mongoose.connection.on('disconnected', () => {
-console.log('Mongoose disconnected');
+    console.log('Mongoose disconnected');
 });
 
-// Windows specific listner
-if(process.platform === 'win32'){
+// Windows specific listener
+if(process.platform === 'win32') {
     const r1 = readLine.createInterface({
         input: process.stdin,
         output: process.stdout
-});
+    });
     r1.on('SIGINT', () => {
         process.emit("SIGINT");
     });
 }
 
-// Configure for Graceful Shutdown
+// Configure the Graceful Shutdown
 const gracefulShutdown = (msg) => {
     mongoose.connection.close(() => {
         console.log(`Mongoose disconnected through ${msg}`);
@@ -42,7 +43,8 @@ const gracefulShutdown = (msg) => {
 };
 
 // Event Listeners to process graceful shutdowns
-// Shutdown invoked by nodemon signal
+
+//Shutdown invoked by nodemon signal
 process.once('SIGUSR2', () => {
     gracefulShutdown('nodemon restart');
     process.kill(process.pid, 'SIGUSR2');
@@ -63,6 +65,6 @@ process.on('SIGTERM', () => {
 // Make initial connection to DB
 connect();
 
-// Import Mongoose schema
+// Import Mongoose Schema
 require('./travlr');
 module.exports = mongoose;

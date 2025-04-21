@@ -1,11 +1,11 @@
 var fs = require('fs');
-var rooms = JSON.parse(fs.readFileSync('./data/rooms.json', 'utf8'));
+var room = JSON.parse(fs.readFileSync('./data/packages.json','utf8'));
 
-/* GET rooms view */
-const roomsPage = (req, res) => {
-    res.render('rooms', { title: 'Rooms - Travlr Getaways', rooms });
+/* GET room view */
+const rooms = (req, res) => {
+    res.render('rooms', { title: 'Travlr Getaways', room});
 };
 
 module.exports = {
-    roomsPage
+    rooms
 };
