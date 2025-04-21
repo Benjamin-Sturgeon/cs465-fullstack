@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router'; // Import Router for navigation
 import { Trip } from '../models/trip'; // Import Trip model
+import { AuthenticationService } from '../services/authentication.service';
+
 
 @Component({
   selector: 'app-trip-card',
@@ -13,9 +15,16 @@ import { Trip } from '../models/trip'; // Import Trip model
 export class TripCardComponent implements OnInit {
   @Input('trip') trip: any;
 
-  constructor(private router: Router) {} // Inject Router
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService
+  ) {} // Inject Router
 
   ngOnInit(): void {}
+
+  public isLoggedIn(): boolean {
+    return this.authenticationService.isLoggedIn();
+  }
 
   // Add editTrip method
   public editTrip(trip: Trip): void {
